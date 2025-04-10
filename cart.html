@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giỏ Hàng</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .cart-container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .cart-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #1e88e5;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #ccc;
+      text-align: center;
+    }
+
+    th {
+      background-color: #e3f2fd;
+    }
+
+    .total {
+      text-align: right;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    .dark-mode {
+      background-color: #121212;
+      color: #f0f0f0;
+    }
+
+    .dark-mode .cart-container {
+      background-color: #1e1e1e;
+      box-shadow: none;
+    }
+
+    .toggle-theme {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #ffca28;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .toggle-theme:hover {
+      background-color: #fbc02d;
+    }
+
+    .back-home {
+      display: block;
+      text-align: center;
+      margin-top: 30px;
+      text-decoration: none;
+      font-weight: bold;
+      color: #1565c0;
+      transition: 0.3s;
+    }
+
+    .back-home:hover {
+      color: #0d47a1;
+    }
+
+    .qty-btn {
+      padding: 4px 10px;
+      background-color: #2196f3;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      margin: 0 4px;
+      cursor: pointer;
+    }
+
+    .qty-btn:hover {
+      background-color: #1976d2;
+    }
+  </style>
+</head>
+<body>
+  <button class="toggle-theme" onclick="toggleTheme()">Chế độ tối</button>
+  <div class="cart-container">
+    <h2>Giỏ Hàng Của Bạn</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Sản phẩm</th>
+          <th>Số lượng</th>
+          <th>Giá</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody id="cart-items"></tbody>
+    </table>
+    <div class="total">Tổng cộng: 0 VND</div>
+    <a href="index.html" class="back-home">⬅ Quay về trang chính</a>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      document.body.classList.toggle('dark-mode');
+    }
+
+    function addToCart(name, quantity, price) {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      let existing = cart.find(item => item.name === name);
+      if (existing) {
+        existing.quantity += quantity;
+      } else {
+        cart.push({ name, quantity, price });
+      }
+      localStorage.setItem('cart', JSON.stringify(cart));
+      loadCart();
+    }
+
+    function removeFromCart(name, quantity = 1) {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      let existing = cart.find(item => item.name === name);
+      if (existing) {
+        existing.quantity -= quantity;
+        if (existing.quantity <= 0) {
+          cart = cart.filter(item => item.name !== name);
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        loadCart();
+      }
+    }
+
+    function loadCart() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const tbody = document.getElementById('cart-items');
+      let total = 0;
+      tbody.innerHTML = '';
+      cart.forEach(item => {
+        let row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.name}</td>
+          <td>
+            <button class="qty-btn" onclick="removeFromCart('${item.name}', 1)">-</button>
+            ${item.quantity}
+            <button class="qty-btn" onclick="addToCart('${item.name}', 1, ${item.price})">+</button>
+          </td>
+          <td>${(item.price * item.quantity).toLocaleString()} VND</td>
+          <td><button class="qty-btn" onclick="removeFromCart('${item.name}', ${item.quantity})">Xóa</button></td>
+        `;
+        tbody.appendChild(row);
+        total += item.quantity * item.price;
+      });
+      document.querySelector('.total').textContent = 'Tổng cộng: ' + total.toLocaleString() + ' VND';
+    }
+
+    loadCart();
+  </script>
+</body>
+</html>

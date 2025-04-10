@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thời Trang Trendy</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .section-box {
+      background-color: #fff8e1;
+      border: 1px solid #ffecb3;
+      border-left: 6px solid #ffca28;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+      margin-bottom: 40px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Thời Trang Trendy</h1>
+    <p>Phong cách hiện đại - Đẳng cấp mỗi ngày</p>
+  </header>
+
+  <nav>
+    <a href="#sanpham">Sản phẩm</a>
+    <a href="#gioithieu">Giới thiệu</a>
+    <a href="#lienhe">Liên hệ</a>
+    <a href="cart.html">Giỏ hàng</a>
+    <a href="admin.html">Quản trị</a>
+  </nav>
+
+  <div class="hero">
+    <h2>Khám phá bộ sưu tập mới nhất!</h2>
+  </div>
+
+  <section id="sanpham" class="section">
+    <h2>Sản phẩm nổi bật</h2>
+    <div class="products">
+      <div class="product">
+        <img src="Hinh/h01.jpg" alt="Áo sơ mi nam">
+        <h3>Áo Sơ Mi Nam</h3>
+        <p>Giá: 350.000đ</p>
+        <button onclick="addToCart('Áo Sơ Mi Nam', 1, 350000)">Mua ngay</button>
+      </div>
+      <div class="product">
+        <img src="Hinh/h02.webp" alt="Váy nữ mùa hè">
+        <h3>Váy Nữ Mùa Hè</h3>
+        <p>Giá: 420.000đ</p>
+        <button onclick="addToCart('Váy Nữ Mùa Hè', 1, 420000)">Mua ngay</button>
+      </div>
+      <div class="product">
+        <img src="Hinh/h03.jpg" alt="Áo khoác jeans">
+        <h3>Áo Khoác Jeans</h3>
+        <p>Giá: 550.000đ</p>
+        <button onclick="addToCart('Áo Khoác Jeans', 1, 550000)">Mua ngay</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="gioithieu" class="section section-box">
+    <h2>Về Chúng Tôi</h2>
+    <p>Thời Trang Trendy là thương hiệu thời trang trẻ trung, hiện đại, mang đến phong cách cá tính và nổi bật cho giới trẻ. Chúng tôi không ngừng cập nhật xu hướng để mang đến những sản phẩm chất lượng nhất với mức giá hợp lý.</p>
+  </section>
+
+  <section id="lienhe" class="section section-box">
+    <h2>Liên hệ</h2>
+    <form>
+      <input type="text" placeholder="Tên của bạn" required />
+      <input type="email" placeholder="Email" required />
+      <textarea placeholder="Nội dung liên hệ..." rows="5" required></textarea>
+      <button type="submit">Gửi</button>
+    </form>
+  </section>
+
+  <div style="text-align: center; margin: 30px;">
+    <a href="cart.html" class="to-cart">🛒 Xem giỏ hàng</a>
+  </div>
+
+  <footer>
+    &copy; 2025 Thời Trang Trendy. All rights reserved.
+  </footer>
+
+  <script>
+    function addToCart(name, quantity, price) {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      let existing = cart.find(item => item.name === name);
+      if (existing) {
+        existing.quantity += quantity;
+      } else {
+        cart.push({ name, quantity, price });
+      }
+      localStorage.setItem('cart', JSON.stringify(cart));
+      alert("Đã thêm vào giỏ hàng!");
+    }
+
+    function removeFromCart(name, quantity = 1) {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      let existing = cart.find(item => item.name === name);
+      if (existing) {
+        existing.quantity -= quantity;
+        if (existing.quantity <= 0) {
+          cart = cart.filter(item => item.name !== name);
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+      }
+    }
+  </script>
+</body>
+</html>
